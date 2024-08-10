@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/product.css">
+    <link rel="stylesheet" href="/css/forms.css">
+    <style>
+        /* General Styling */
+/* General Styling */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.menu-toggle, .mobile-nav__toggle {
+    background-color: #006b00; /* Dark green */
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* Main Header Styling */
+.main-header {
+    background-color: #004d00; /* Dark green */
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.main-header__nav {
+    display: flex;
+}
+
+.main-header__item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.main-header__item {
+    margin: 0 10px;
+}
+
+.main-header__item a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.main-header__item a.active, .main-header__item a:hover {
+    background-color: #003300; /* Darker green */
+}
+
+/* Mobile Navigation Styling */
+.mobile-nav {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        display: none;
+    }
+
+    .mobile-nav {
+        display: block;
+        background-color: #004d00; /* Dark green */
+        color: white;
+        padding: 10px;
+    }
+
+    .mobile-nav__item-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .mobile-nav__item {
+        margin: 10px 0;
+    }
+
+    .mobile-nav__item a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        display: block;
+    }
+
+    .mobile-nav__item a.active, .mobile-nav__item a:hover {
+        background-color: #003300; /* Darker green */
+    }
+
+    .mobile-nav__toggle {
+        background-color: #004d00; /* Dark green */
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+    }
+}
+
+/* Logout Button Styling */
+.btn-logout {
+    background-color: #006600; /* Slightly lighter green */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-logout:hover {
+    background-color: #048704; /* Dark green */
+}
+
+
+    </style>
