@@ -284,8 +284,8 @@ exports.postEditProduct = async (req, res, next) => {
 };
 
 
-exports.postDeleteProduct = async (req, res, next) => {
-  const prodId = req.body.productId;
+exports.deleteProduct = async (req, res, next) => {
+  const prodId = req.params.productId;
 
   try {
     // Find the product to get the image URL
@@ -293,7 +293,7 @@ exports.postDeleteProduct = async (req, res, next) => {
 
     if (!product) {
       console.log('Product not found');
-      return res.redirect('/admin/products');
+      return res.status(400).json({message: 'Product not found'});
     }
 
     // Extract the public ID from the image URL
@@ -321,11 +321,8 @@ exports.postDeleteProduct = async (req, res, next) => {
     await Product.deleteOne({ _id: prodId, userId: req.user._id });
 
     console.log('Product deleted');
-    res.redirect('/admin/products');
+    res.status(200).json({message: 'success'});
   } catch (err) {
-    console.error('Error deleting product or image:', err);
-    const error = new Error(err);
-    error.httpStatusCode = 500;
-    return next(error);
+   return res.status(500).json({message: 'Deleting product failed'});
   }
 };

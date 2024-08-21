@@ -19,7 +19,10 @@ router.post('/cart-delete-item', isAuth, shopController.postcartDeleteItem);
 router.post('/create-order', isAuth, shopController.postOrders);
 
 // // router.get('/checkout',shopController.getCheckout);
+router.post('/razorpay-callback', shopController.postRazorpayCallback);
+router.get('/checkout', isAuth, shopController.getCheckout);
 router.get('/orders', isAuth, shopController.getOrders);
+
 router.get('/orders/:orderId', isAuth, shopController.getInvoice);
 
 module.exports = router;

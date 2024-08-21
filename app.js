@@ -18,8 +18,6 @@ const multer = require('multer');
 
 const User = require('./models/users');
 
-// const exphbs = require('express-handlebars');
-// const mongoConnect = require('./utility/databases').mongoconnect;
 
 const MONGODB_URI = process.env.MONGODB_URI;
 

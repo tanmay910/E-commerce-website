@@ -1,3 +1,4 @@
+
 <%- include('../include/head.ejs') %>
     <link rel="stylesheet" href="/css/cart.css">
     </head>
@@ -20,16 +21,19 @@
                     <% }) %>
                 </ul>
                 <hr>
+                
                 <div class="centered">
-                    <form action="/create-order" method="POST">
+                    <!-- <form action="/create-order" method="POST">
                         
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <button type="submit" class="btn">Order Now!</button>
-                    </form>
+                    </form> -->
                 </div>
-                
+
+                <a  class="btn" href="/checkout" > Order Now!</a>                
             <% } else { %>
                 <h1>No Products in Cart!</h1>
             <% } %>
         </main>
         <%- include('../include/end.ejs') %>
+
