@@ -5,6 +5,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cloudinary = require('./config/cloudinary'); 
 
+const { startConsumer } = require('./services/consumers');
+
 dotenv.config();
 
 
@@ -85,6 +87,7 @@ app.set('views', 'views');
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.use(
     multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
@@ -175,7 +178,8 @@ app.use((error,req,res,next) => {
     res.status(500).render('505', {
         pageTitle:'505',    
         path :'/505',
-        isAuthenticate : req.session && req.session.isLoggedIn ? req.session.isLoggedIn : false
+        isAuthenticate : req.session && req.session.isLoggedIn ? req.session.isLoggedIn : false,
+        csrfToken : req.csrfToken()
     });
 });
 
@@ -186,6 +190,7 @@ mongoose.connect(MONGODB_URI)
         console.log('connect to database');
         
         app.listen(3000);
+        startConsumer('email_queue').catch(console.error);
     }).catch(err => {
         console.log(err);
     })

@@ -16,12 +16,15 @@ router.get('/products/:productId', shopController.getProduct);
 router.get('/cart', isAuth, shopController.getCart);
 router.post('/cart', isAuth, shopController.postcart);
 router.post('/cart-delete-item', isAuth, shopController.postcartDeleteItem);
-router.post('/create-order', isAuth, shopController.postOrders);
+// router.post('/create-order', isAuth, shopController.postOrders);
 
 // // router.get('/checkout',shopController.getCheckout);
-router.post('/razorpay-callback', shopController.postRazorpayCallback);
+router.post('/payment-success', shopController.postRazorpayCallback);
 router.get('/checkout', isAuth, shopController.getCheckout);
-router.get('/orders', isAuth, shopController.getOrders);
+
+router.post('/create-order', isAuth, shopController.postCreateOrders);
+
+router.get('/orders',isAuth, shopController.getOrders);
 
 router.get('/orders/:orderId', isAuth, shopController.getInvoice);
 

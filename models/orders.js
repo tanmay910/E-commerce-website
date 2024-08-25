@@ -2,28 +2,28 @@ const mongoose = require('mongoose');
 
 const Schema  = mongoose.Schema;
 
-const  orderschema = new Schema({
-    products: [
-        {
-            product : {type : Object , required: true},
-            quantity : {type : Number , required : true}
-        }
-    ],
+// const  orderschema = new Schema({
+//     products: [
+//         {
+//             product : {type : Object , required: true},
+//             quantity : {type : Number , required : true}
+//         }
+//     ],
 
-    user : {
-        email : {
-            type : String,
-            required: true
-        },
+//     user : {
+//         email : {
+//             type : String,
+//             required: true
+//         },
 
-        userId :{
-            type : Schema.Types.ObjectId,
-            required : true,
-            ref: 'User'
-        }
-    }
+//         userId :{
+//             type : Schema.Types.ObjectId,
+//             required : true,
+//             ref: 'User'
+//         }
+//     }
 
-});
+// });
 const orderSchema = new Schema({
     products: [
         {
@@ -54,4 +54,4 @@ const orderSchema = new Schema({
   });
 
 
-module.exports = mongoose.model('Order',orderschema);
+module.exports = mongoose.model('Order',orderSchema);

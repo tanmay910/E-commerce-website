@@ -1,8 +1,8 @@
 
 const User = require('../models/users');
 const bcrypt = require('bcryptjs');
-const nodemailer = require('nodemailer');
-const sendgridTransport = require('nodemailer-sendgrid-transport');
+const { sendToQueue } = require('../services/producers');
+
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -11,12 +11,6 @@ const { validationResult } = require('express-validator');
 
 
 
-const transporter = nodemailer.createTransport(sendgridTransport({
-    auth: {
-        api_key: process.env.SENDGRID_API_KEY
-    }
-}
-));
 
 
 
@@ -152,70 +146,116 @@ exports.getSignup = (req, res, next) => {
 
 }
 
-exports.postSignup = (req, res, next) => {
+// exports.postSignup = (req, res, next) => {
 
-    const email = req.body.email;
-    const password = req.body.password;
-    const confirmPassword = req.body.confirmPassword;
+//     const email = req.body.email;
+//     const password = req.body.password;
+//     const confirmPassword = req.body.confirmPassword;
+//     const errors = validationResult(req);
+//     console.log('her');
+
+//     if (!errors.isEmpty()) {
+//         console.log(errors.array());
+//         return res.status(422).render('auth/signup', {
+//             path: '/signup', pageTitle: 'Signup',
+//              errorMessage: errors.array()[0].msg,
+//              oldInput:{
+//                 email: email,
+//                 password: password,
+//                 confirmPassword: confirmPassword
+//              },
+//              validationError: errors.array()
+//         });
+//     }
+
+//     User.findOne({ email: email }).then(
+//         userdoc => {
+//             if (userdoc) {
+//                 req.flash('error', 'Email already exist, please use another email.');
+//                 return res.redirect('/signup');
+//             }
+
+//             return bcrypt.hash(password, 12).then((hashpassword) => {
+//                 const user = new User({
+//                     email: email,
+//                     password: hashpassword,
+//                     cart: {
+//                         items: []
+//                     }
+//                 })
+
+//                 return user.save();
+//             })
+//                 .then((result) => {
+//                      console.log('ee');    
+
+//                     res.redirect('/login');
+
+//                     return transporter.sendMail({
+//                         to: email,
+//                         from: 'mahajantanmay910@gmail.com',
+//                         subject: 'Signup succeeded!',
+//                         html: '<p>Dear [Recipient],</p><p>Thank you for signing up with our service.We are delighted to welcome you aboard!</p><p>Sincerely,<br>Your Company Name</p>'
+//                     })
+//                 })
+
+//         }
+
+//     ).catch(err => {
+//         const error = new Error(err);
+//         error.httpStatusCode = 500;
+//         return next(error);
+//       });
+
+
+// }
+
+
+exports.postSignup = (req, res, next) => {
+    const { email, password, confirmPassword } = req.body;
     const errors = validationResult(req);
-    console.log('her');
+    console.log('here');
 
     if (!errors.isEmpty()) {
         console.log(errors.array());
         return res.status(422).render('auth/signup', {
-            path: '/signup', pageTitle: 'Signup',
-             errorMessage: errors.array()[0].msg,
-             oldInput:{
-                email: email,
-                password: password,
-                confirmPassword: confirmPassword
-             },
-             validationError: errors.array()
+            path: '/signup',
+            pageTitle: 'Signup',
+            errorMessage: errors.array()[0].msg,
+            oldInput: { email, password, confirmPassword },
+            validationError: errors.array()
         });
     }
 
-    User.findOne({ email: email }).then(
-        userdoc => {
+    User.findOne({ email: email })
+        .then(userdoc => {
             if (userdoc) {
-                req.flash('error', 'Email already exist, please use another email.');
+                req.flash('error', 'Email already exists, please use another email.');
                 return res.redirect('/signup');
             }
 
-            return bcrypt.hash(password, 12).then((hashpassword) => {
-                const user = new User({
-                    email: email,
-                    password: hashpassword,
-                    cart: {
-                        items: []
-                    }
+            return bcrypt.hash(password, 12)
+                .then(hashpassword => {
+                    const user = new User({
+                        email: email,
+                        password: hashpassword,
+                        cart: { items: [] }
+                    });
+                    return user.save();
                 })
-
-                return user.save();
-            })
-                .then((result) => {
-                     console.log('ee');    
-
+                .then(() => {
                     res.redirect('/login');
-
-                    return transporter.sendMail({
-                        to: email,
-                        from: 'mahajantanmay910@gmail.com',
-                        subject: 'Signup succeeded!',
-                        html: '<p>Dear [Recipient],</p><p>Thank you for signing up with our service.We are delighted to welcome you aboard!</p><p>Sincerely,<br>Your Company Name</p>'
-                    })
-                })
-
-        }
-
-    ).catch(err => {
-        const error = new Error(err);
-        error.httpStatusCode = 500;
-        return next(error);
-      });
-
-
-}
-
+                    
+                    // Send email task to RabbitMQ queue
+                    return sendToQueue('email_queue', { email: email });
+                });
+        })
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
+};
 
 exports.postLogout = (req, res, next) => {
 
